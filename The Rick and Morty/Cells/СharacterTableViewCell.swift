@@ -15,7 +15,7 @@ class СharacterTableViewCell: UITableViewCell {
         imageView.clipsToBounds = true
         imageView.layer.borderWidth = 1.0
         imageView.layer.borderColor = UIColor.specialGreen.cgColor
-        imageView.applyShadow(cornerRadius: 2.0, opacity: 0.5)
+        imageView.applyShadow(cornerRadius: 2.0)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

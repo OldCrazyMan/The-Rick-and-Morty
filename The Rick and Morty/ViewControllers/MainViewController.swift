@@ -50,12 +50,12 @@ class MainViewController: UIViewController {
         button.titleLabel?.font = .getBoldLabel22()
         button.backgroundColor = .specialBlueLabel
         button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.specialGreen.cgColor
+        button.layer.borderColor = UIColor.specialDarkGreen.cgColor
         button.setTitle("CHARACTERS", for: .normal)
         button.setTitleColor(UIColor.specialYellow, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(characterButtonTap), for: .touchUpInside)
-        button.applyShadow(cornerRadius: 10, opacity: 1.0)
+        button.applyShadow(cornerRadius: 10)
         return button
     }()
     
@@ -65,12 +65,12 @@ class MainViewController: UIViewController {
         button.titleLabel?.font = .getBoldLabel22()
         button.backgroundColor = .specialBlueLabel
         button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.specialGreen.cgColor
+        button.layer.borderColor = UIColor.specialDarkGreen.cgColor
         button.setTitle("LOCATIONS", for: .normal)
         button.setTitleColor(UIColor.specialYellow, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(locationButtonTap), for: .touchUpInside)
-        button.applyShadow(cornerRadius: 10, opacity: 1.0)
+        button.applyShadow(cornerRadius: 10)
         return button
     }()
     
@@ -80,12 +80,12 @@ class MainViewController: UIViewController {
         button.titleLabel?.font = .getBoldLabel22()
         button.backgroundColor = .specialBlueLabel
         button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.specialGreen.cgColor
+        button.layer.borderColor = UIColor.specialDarkGreen.cgColor
         button.setTitle("EPISODES", for: .normal)
         button.setTitleColor(UIColor.specialYellow, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(episodeButtonTap), for: .touchUpInside)
-        button.applyShadow(cornerRadius: 10, opacity: 1.0)
+        button.applyShadow(cornerRadius: 10)
         return button
     }()
     
@@ -113,11 +113,9 @@ class MainViewController: UIViewController {
     
     @objc private func characterButtonTap() {
         if characterButton.backgroundColor == UIColor.specialBlueLabel {
-            characterButton.backgroundColor = UIColor.specialGreen
-            characterButton.layer.borderColor = UIColor.specialBlueLabel.cgColor
-        }  else if characterButton.backgroundColor == UIColor.specialGreen {
+            characterButton.backgroundColor = UIColor.specialCellBackground
+        }  else if characterButton.backgroundColor == UIColor.specialCellBackground {
             characterButton.backgroundColor = UIColor.specialBlueLabel
-            characterButton.layer.borderColor = UIColor.specialGreen.cgColor
         }
         
         let characterViewController = CharacterViewController()
@@ -128,11 +126,9 @@ class MainViewController: UIViewController {
     
     @objc private func locationButtonTap() {
         if locationButton.backgroundColor == UIColor.specialBlueLabel {
-            locationButton.backgroundColor = UIColor.specialGreen
-            locationButton.layer.borderColor = UIColor.specialGreen.cgColor
-        }  else if locationButton.backgroundColor == UIColor.specialGreen {
+            locationButton.backgroundColor = UIColor.specialCellBackground
+        }  else if locationButton.backgroundColor == UIColor.specialCellBackground {
             locationButton.backgroundColor = UIColor.specialBlueLabel
-            locationButton.layer.borderColor = UIColor.specialGreen.cgColor
         }
         
         let locationViewController = LocationViewController()
@@ -143,11 +139,9 @@ class MainViewController: UIViewController {
     
     @objc private func episodeButtonTap() {
         if episodeButton.backgroundColor == UIColor.specialBlueLabel {
-            episodeButton.backgroundColor = UIColor.specialGreen
-            episodeButton.layer.borderColor = UIColor.specialGreen.cgColor
-        }  else if episodeButton.backgroundColor == UIColor.specialGreen {
+            episodeButton.backgroundColor = UIColor.specialCellBackground
+        }  else if episodeButton.backgroundColor == UIColor.specialCellBackground {
             episodeButton.backgroundColor = UIColor.specialBlueLabel
-            episodeButton.layer.borderColor = UIColor.specialBlueLabel.cgColor
         }
         
         let episodesViewController = EpisodesViewController()

@@ -8,12 +8,12 @@
 import UIKit
 
 extension UIView {
-    func applyShadow(cornerRadius: CGFloat, opacity: Float) {
+    func applyShadow(cornerRadius: CGFloat) {
         layer.cornerRadius = cornerRadius
         layer.masksToBounds = false
-        layer.shadowRadius = 5.0
-        layer.shadowOpacity = opacity
+        layer.shadowRadius = 2
+        layer.shadowOpacity = 1.0
         layer.shadowColor = UIColor.specialGreen.cgColor
-        layer.shadowOffset = CGSize(width: 2, height: 3)
+        layer.shadowOffset = CGSize(width: 0, height: 3)
     }
 }
