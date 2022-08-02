@@ -12,19 +12,21 @@ class LocationsTableViewCell: UITableViewCell {
     let namaLocationLabel = UILabel(text: "",
                                     font: .getBoldLabel22(),
                                     color: .specialBlueLabel,
-                                    line: 0)
+                                    line: 1)
     
     let typeLabel = UILabel(text: "",
                             font: .getRegularLabel18(),
                             color: .specialGreen,
-                            line: 0)
+                            line: 2)
     
     let dimensionLabel = UILabel(text: "",
                                  font: .getRegularLabel18(),
                                  color: .specialGreen,
-                                 line: 0)
+                                 line: 2)
     
     private var locationStackView = UIStackView()
+    
+    //MARK: - Override
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -37,6 +39,8 @@ class LocationsTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - setupViews
+    
     private func setupViews() {
         backgroundColor = .specialCellBackground
         selectionStyle = .none
@@ -46,9 +50,10 @@ class LocationsTableViewCell: UITableViewCell {
                                                             dimensionLabel],
                                          axis: .vertical,
                                          spacing: 8)
-        
         addSubview(locationStackView)
     }
+    
+    //MARK: - ConfigureCell
     
     func cellConfigure(model: Location) {
         namaLocationLabel.text = model.name

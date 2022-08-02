@@ -15,7 +15,6 @@ class EpisodesViewController: UIViewController {
         tableView.backgroundColor = .specialCellBackground
         tableView.separatorColor = .specialBlueLabel
         tableView.showsVerticalScrollIndicator = false
-        tableView.register(EpisodesTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -24,7 +23,7 @@ class EpisodesViewController: UIViewController {
     private var page = 1
     private var nextPage = true
     private var isFiltred = false
-    
+    private let idTableViewCell = "idTableViewCell"
     private var searchController = UISearchController()
     
     private var searchedText = String()
@@ -32,16 +31,21 @@ class EpisodesViewController: UIViewController {
     private var resultsArray = [Episode]()
     private var filtredArray = [Episode]()
     
+    //MARK: - Override
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         fetchCharacters(page: page)
-        tableView.reloadData()
         navigationBarSettings()
         setupViews()
         setupDelegate()
         setConstraints()
+        
+        tableView.register(EpisodesTableViewCell.self, forCellReuseIdentifier: idTableViewCell)
     }
+    
+    //MARK: - Setups
     
     private func setupViews() {
         view.backgroundColor = .specialCellBackground
@@ -51,19 +55,16 @@ class EpisodesViewController: UIViewController {
     private func setupDelegate() {
         tableView.delegate = self
         tableView.dataSource = self
-
+        
         searchController.searchBar.delegate = self
     }
     
     private func navigationBarSettings() {
         
         if let navController = navigationController {
-         
             navController.navigationBar.barStyle = .black
             navController.navigationBar.tintColor = .specialYellow
-      
             searchController = UISearchController(searchResultsController: nil)
-     
             searchController.obscuresBackgroundDuringPresentation = false
             searchController.searchBar.returnKeyType = .done
             searchController.searchBar.placeholder = "Search episode..."
@@ -73,15 +74,15 @@ class EpisodesViewController: UIViewController {
             searchController.isActive = true
         }
     }
-        private func refreshData() {
-            filtredArray.removeAll()
-            isFiltred = false
-            tableView.reloadData()
-        }
+    private func refreshData() {
+        filtredArray.removeAll()
+        isFiltred = false
+        tableView.reloadData()
+    }
     
-    //MARK: - FiltringRecipes
+    //MARK: - Filtring
     
-    private func filtringRecipes(text: String) {
+    private func filtringEpisodes(text: String) {
         for character in resultsArray {
             if character.name.lowercased().contains(text.lowercased())  {
                 filtredArray.append(character)
@@ -92,14 +93,14 @@ class EpisodesViewController: UIViewController {
 
 extension EpisodesViewController: UISearchBarDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-       refreshData()
+        refreshData()
         return true
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
         filtredArray = [Episode]()
-        filtringRecipes(text: text)
+        filtringEpisodes(text: text)
         tableView.reloadData()
     }
     
@@ -110,7 +111,7 @@ extension EpisodesViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filtredArray = [Episode]()
         isFiltred = (searchText.count > 0 ? true : false)
-        filtringRecipes(text: searchText)
+        filtringEpisodes(text: searchText)
         self.searchedText = searchText
         tableView.reloadData()
     }
@@ -124,7 +125,7 @@ extension EpisodesViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! EpisodesTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: idTableViewCell, for: indexPath) as! EpisodesTableViewCell
         let characterModel = isFiltred ? filtredArray[indexPath.row] : resultsArray[indexPath.row]
         cell.cellConfigure(model: characterModel)
         cell.setHiglightToLable(searchText: self.searchedText, text: characterModel.name)
@@ -154,46 +155,24 @@ extension EpisodesViewController: UITableViewDelegate {
 extension EpisodesViewController {
     
     func fetchCharacters(page: Int) {
-
-        NetworkDataFetch.shared.getEpisodesData(page: page) { [weak self] result in
-            guard let self = self else { return }
-
-            switch result {
-            case .success(let response):
-                if self.resultsArray.count < self.characterCount { self.nextPage = false }
-
-                self.resultsArray += response.results
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+        NetworkManager.shared.getEpisodes(page: page, name: nil) { [weak self] (episodes) in
+            guard let self = self else {return}
+            let _ = ActivityIndicator.shared.customActivityIndicatory(self.view, startAnimate: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)  {
+                self.resultsArray += episodes
+                self.tableView.reloadData()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)  {
                     let _ = ActivityIndicator.shared.customActivityIndicatory(self.view, startAnimate: false)
                 }
-            case .failure(_):
-                let _ = ActivityIndicator.shared.customActivityIndicatory(self.view, startAnimate: true)
-                self.alertOk(title: "Connect error", message: "Please, check your internet connection.")
-            }
-        }
-    }
-    
-    func fetchCharacterCount() {
-        NetworkDataFetch.shared.fetchCharacterCount() { [weak self] result in
-            guard let self =  self else { return }
-            
-            switch result {
-            case .success(let response):
-                self.characterCount = response.info.count
-            case .failure(_):
-                return
             }
         }
     }
 }
-
 //MARK: - SetConstraints
 
 extension EpisodesViewController {
     
     private func setConstraints() {
-        
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),

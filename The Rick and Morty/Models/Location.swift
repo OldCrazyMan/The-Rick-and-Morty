@@ -13,6 +13,7 @@ struct PagedLocation: Codable {
 }
 
 // MARK: - Location
+
 struct Location: Codable {
     let id: Int
     let name: String

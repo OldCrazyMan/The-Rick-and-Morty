@@ -22,25 +22,29 @@ class СharacterTableViewCell: UITableViewCell {
     
     let nameCharacterLabel = UILabel(text: "",
                                      font: .getBoldLabel22(),
-                                     color: .specialBlueLabel, line: 0)
+                                     color: .specialBlueLabel,
+                                     line: 2)
     
     let speciesLabel = UILabel(text: "",
-                               font: .getRegularLabel18(),
-                               color: .specialGreen, line: 0)
+                               font: .getRegularLabel16(),
+                               color: .specialGreen, line: 2)
     
     let genderLabel = UILabel(text: "",
-                              font: .getRegularLabel18(),
-                              color: .specialGreen, line: 0)
+                              font: .getRegularLabel16(),
+                              color: .specialGreen,
+                              line: 2)
     
     private let locationTextLabel = UILabel(text: "",
-                                            font: .getRegularLabel18(),
-                                            color: .specialGreen, line: 0)
+                                            font: .getRegularLabel16(),
+                                            color: .specialGreen,
+                                            line: 2)
     
     private var characterStackView = UIStackView()
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
+    //MARK: - Override
+    
+    override func prepareForReuse() {
+        characterImageView.image = UIImage(named: "NoImage") 
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -53,6 +57,8 @@ class СharacterTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK: - SetupViews
     
     private func setupViews() {
         backgroundColor = .specialCellBackground
@@ -68,22 +74,22 @@ class СharacterTableViewCell: UITableViewCell {
         addSubview(characterStackView)
     }
     
-    func cellConfigure(model: Result) {
+    //MARK: - ConfigureCell
+    
+    func cellConfigure(model: Character) {
         nameCharacterLabel.text = model.name
         speciesLabel.text = "Species: \(model.species)"
         genderLabel.text =  "Gender: \(model.gender)"
         locationTextLabel.text = "Location: \(model.location.name )"
-
+        
         let url: URL = URL(string: "https://rickandmortyapi.com/api/character/avatar/\(model.id).jpeg")!
-
-        NetworkImageFetch.shared.requestImage(url: url) { [weak self] result in
+        
+        NetworkManager.shared.getImage(fromUrl: url) { [weak self] (image) in
+            guard let image = image else { return }
             guard let self = self else { return }
-            switch result {
-            case .success(let data):
-                let image = UIImage(data: data)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.characterImageView.image = image
-            case .failure(_):
-                print("no image")
             }
         }
     }

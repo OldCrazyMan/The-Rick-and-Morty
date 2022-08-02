@@ -15,8 +15,6 @@ class CharacterViewController: UIViewController {
         tableView.backgroundColor = .specialCellBackground
         tableView.separatorColor = .specialBlueLabel
         tableView.showsVerticalScrollIndicator = false
-        tableView.bounces = false
-        tableView.register(СharacterTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -24,29 +22,34 @@ class CharacterViewController: UIViewController {
     private var characterCount = 0
     private var page = 1
     private var nextPage = true
+    private let idTableViewCell = "idTableViewCell"
     
     private var searchController = UISearchController()
     private var searchedText = String()
     private var isFiltred = false
     
-    private var characters: Character?
-    private var resultsArray = [Result]()
-    private var filtredArray = [Result]()
+    private var characters: CharacterList?
+    private var resultsArray = [Character]()
+    private var filtredArray = [Character]()
+    
+    //MARK: - Override
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         fetchCharacters(page: page)
-        tableView.reloadData()
         navigationBarSettings()
         setupViews()
         setupDelegate()
         setConstraints()
+        
+        tableView.register(СharacterTableViewCell.self, forCellReuseIdentifier: idTableViewCell)
     }
+    
+    //MARK: - Setups
     
     private func setupViews() {
         view.backgroundColor = .specialCellBackground
-        
         view.addSubview(tableView)
     }
     
@@ -59,12 +62,10 @@ class CharacterViewController: UIViewController {
     private func navigationBarSettings() {
         
         if let navController = navigationController {
-            
             navController.navigationBar.barStyle = .black
             navController.navigationBar.tintColor = .specialYellow
             
             searchController = UISearchController(searchResultsController: nil)
-            
             searchController.obscuresBackgroundDuringPresentation = false
             searchController.searchBar.returnKeyType = .done
             searchController.searchBar.placeholder = "Search character..."
@@ -81,7 +82,7 @@ class CharacterViewController: UIViewController {
         tableView.reloadData()
     }
     
-    private func filtringRecipes(text: String) {
+    private func filtringCharacter(text: String) {
         for location in resultsArray {
             if location.name.lowercased().contains(text.lowercased())  {
                 filtredArray.append(location)
@@ -89,6 +90,7 @@ class CharacterViewController: UIViewController {
         }
     }
 }
+//MARK: - UISearchBarDelegate
 
 extension CharacterViewController: UISearchBarDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -98,8 +100,8 @@ extension CharacterViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
-        filtredArray = [Result]()
-        filtringRecipes(text: text)
+        filtredArray = [Character]()
+        filtringCharacter(text: text)
         tableView.reloadData()
     }
     
@@ -108,13 +110,12 @@ extension CharacterViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filtredArray = [Result]()
+        filtredArray = [Character]()
         isFiltred = (searchText.count > 0 ? true : false)
-        filtringRecipes(text: searchText)
+        filtringCharacter(text: searchText)
         self.searchedText = searchText
         tableView.reloadData()
     }
-    
 }
 //MARK: - UITableViewDataSource
 
@@ -124,7 +125,7 @@ extension CharacterViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! СharacterTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: idTableViewCell, for: indexPath) as! СharacterTableViewCell
         let characterModel = isFiltred ? filtredArray[indexPath.row] : resultsArray[indexPath.row]
         cell.cellConfigure(model: characterModel)
         cell.setHiglightToLable(searchText: self.searchedText, text: characterModel.name)
@@ -153,35 +154,14 @@ extension CharacterViewController: UITableViewDelegate {
 
 extension CharacterViewController {
     
-    func fetchCharacters(page: Int) {
-        NetworkDataFetch.shared.fetchCharacters(page: page) { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .success(let response):
-                if self.resultsArray.count < self.characterCount { self.nextPage = false }
-                
-                self.resultsArray += response.results
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    let _ = ActivityIndicator.shared.customActivityIndicatory(self.view, startAnimate: false)
-                }
-            case .failure(_):
-                let _ = ActivityIndicator.shared.customActivityIndicatory(self.view, startAnimate: true)
-                self.alertOk(title: "Connect error", message: "Please, check your internet connection.")
-            }
-        }
-    }
-    
-    func fetchCharacterCount() {
-        NetworkDataFetch.shared.fetchCharacterCount() { [weak self] result in
-            guard let self =  self else { return }
-            
-            switch result {
-            case .success(let response):
-                self.characterCount = response.info.count
-            case .failure(_):
-                return
+    private func fetchCharacters(page: Int)  {
+        NetworkManager.shared.getCaracters(page: page, name: nil, status: nil, species: nil, gender: nil) { [weak self] (characters) in
+            guard let self = self else {return}
+            let _ = ActivityIndicator.shared.customActivityIndicatory(self.view, startAnimate: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+                self.resultsArray += characters
+                self.tableView.reloadData()
+                let _ = ActivityIndicator.shared.customActivityIndicatory(self.view, startAnimate: false)
             }
         }
     }
@@ -192,7 +172,6 @@ extension CharacterViewController {
 extension CharacterViewController {
     
     private func setConstraints() {
-        
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),

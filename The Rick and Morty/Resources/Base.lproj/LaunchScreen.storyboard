@@ -19,17 +19,18 @@
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" image="rickandmorty" translatesAutoresizingMaskIntoConstraints="NO" id="YkU-qa-Sm2">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="YkU-qa-Sm2" secondAttribute="height" multiplier="149:227" constant="-174.12334801762108" id="y5c-Xb-CRO"/>
-                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="YkU-qa-Sm2" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="G9W-9K-Sqh"/>
+                            <constraint firstItem="YkU-qa-Sm2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="PJK-F3-GE2"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="YkU-qa-Sm2" secondAttribute="bottom" constant="-34" id="Xd9-q4-ifw"/>
                             <constraint firstItem="YkU-qa-Sm2" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="-44" id="bIA-4z-wfF"/>
+                            <constraint firstAttribute="bottom" secondItem="YkU-qa-Sm2" secondAttribute="bottom" id="dAt-20-von"/>
+                            <constraint firstItem="YkU-qa-Sm2" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="mEG-fv-3jH"/>
+                            <constraint firstAttribute="trailing" secondItem="YkU-qa-Sm2" secondAttribute="trailing" id="uhp-qu-e4O"/>
                         </constraints>
                     </view>
                 </viewController>

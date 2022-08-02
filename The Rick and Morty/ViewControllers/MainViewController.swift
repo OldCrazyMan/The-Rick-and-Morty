@@ -9,10 +9,37 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    private let addPhotoImageView: UIImageView = {
+    private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "rickandmorty")
         imageView.alpha = 0.3
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let characterImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "RickHead")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let locationImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "portalGun")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let episodeImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "mortyHead")
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -39,7 +66,7 @@ class MainViewController: UIViewController {
         button.backgroundColor = .specialBlueLabel
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.specialGreen.cgColor
-        button.setTitle("LOCATIONS-S-s", for: .normal)
+        button.setTitle("LOCATIONS", for: .normal)
         button.setTitleColor(UIColor.specialYellow, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(locationButtonTap), for: .touchUpInside)
@@ -62,6 +89,8 @@ class MainViewController: UIViewController {
         return button
     }()
     
+    //MARK: - Override
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -69,15 +98,28 @@ class MainViewController: UIViewController {
         setConstraints()
     }
     
+    //MARK: - Setups
+    
     private func setupViews() {
         view.backgroundColor = .specialBackground
-        view.addSubview(addPhotoImageView)
+        view.addSubview(backgroundImageView)
         view.addSubview(characterButton)
+        view.addSubview(characterImageView)
         view.addSubview(locationButton)
+        view.addSubview(locationImageView)
         view.addSubview(episodeButton)
+        view.addSubview(episodeImageView)
     }
     
     @objc private func characterButtonTap() {
+        if characterButton.backgroundColor == UIColor.specialBlueLabel {
+            characterButton.backgroundColor = UIColor.specialGreen
+            characterButton.layer.borderColor = UIColor.specialBlueLabel.cgColor
+        }  else if characterButton.backgroundColor == UIColor.specialGreen {
+            characterButton.backgroundColor = UIColor.specialBlueLabel
+            characterButton.layer.borderColor = UIColor.specialGreen.cgColor
+        }
+        
         let characterViewController = CharacterViewController()
         navigationItem.backButtonTitle = "B-B-b-back!"
         navigationController?.pushViewController(characterViewController, animated: true)
@@ -85,6 +127,14 @@ class MainViewController: UIViewController {
     }
     
     @objc private func locationButtonTap() {
+        if locationButton.backgroundColor == UIColor.specialBlueLabel {
+            locationButton.backgroundColor = UIColor.specialGreen
+            locationButton.layer.borderColor = UIColor.specialGreen.cgColor
+        }  else if locationButton.backgroundColor == UIColor.specialGreen {
+            locationButton.backgroundColor = UIColor.specialBlueLabel
+            locationButton.layer.borderColor = UIColor.specialGreen.cgColor
+        }
+        
         let locationViewController = LocationViewController()
         navigationItem.backButtonTitle = "B-B-b-back!"
         navigationController?.pushViewController(locationViewController, animated: true)
@@ -92,6 +142,14 @@ class MainViewController: UIViewController {
     }
     
     @objc private func episodeButtonTap() {
+        if episodeButton.backgroundColor == UIColor.specialBlueLabel {
+            episodeButton.backgroundColor = UIColor.specialGreen
+            episodeButton.layer.borderColor = UIColor.specialGreen.cgColor
+        }  else if episodeButton.backgroundColor == UIColor.specialGreen {
+            episodeButton.backgroundColor = UIColor.specialBlueLabel
+            episodeButton.layer.borderColor = UIColor.specialBlueLabel.cgColor
+        }
+        
         let episodesViewController = EpisodesViewController()
         navigationItem.backButtonTitle = "B-B-b-back!"
         navigationController?.pushViewController(episodesViewController, animated: true)
@@ -99,42 +157,58 @@ class MainViewController: UIViewController {
     }
 }
 
-
 //MARK: - SetConstraints
 
 extension MainViewController {
     private func setConstraints() {
         
         NSLayoutConstraint.activate([
-            characterButton.topAnchor.constraint(equalTo: view.centerYAnchor),
+            characterButton.bottomAnchor.constraint(equalTo: locationButton.topAnchor, constant: -40),
             characterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            characterButton.widthAnchor.constraint(equalToConstant: 300),
-            characterButton.heightAnchor.constraint(equalToConstant: 60)
+            characterButton.widthAnchor.constraint(equalToConstant: 350),
+            characterButton.heightAnchor.constraint(equalToConstant: 70)
         ])
         
         NSLayoutConstraint.activate([
-            locationButton.topAnchor.constraint(equalTo: characterButton.bottomAnchor, constant: 40),
+            characterImageView.topAnchor.constraint(equalTo: characterButton.topAnchor, constant: 1),
+            characterImageView.leadingAnchor.constraint(equalTo: characterButton.leadingAnchor, constant: 0),
+            characterImageView.bottomAnchor.constraint(equalTo: characterButton.bottomAnchor, constant: -1),
+            characterImageView.widthAnchor.constraint(equalToConstant: 100)
+        ])
+        
+        NSLayoutConstraint.activate([
+            locationButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             locationButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            locationButton.widthAnchor.constraint(equalToConstant: 300),
-            locationButton.heightAnchor.constraint(equalToConstant: 60)
+            locationButton.widthAnchor.constraint(equalToConstant: 350),
+            locationButton.heightAnchor.constraint(equalToConstant: 70)
+        ])
+        
+        NSLayoutConstraint.activate([
+            locationImageView.topAnchor.constraint(equalTo: locationButton.topAnchor, constant: 1),
+            locationImageView.leadingAnchor.constraint(equalTo: locationButton.leadingAnchor, constant: 10),
+            locationImageView.bottomAnchor.constraint(equalTo: locationButton.bottomAnchor, constant: -1),
+            locationImageView.widthAnchor.constraint(equalToConstant: 100)
         ])
         
         NSLayoutConstraint.activate([
             episodeButton.topAnchor.constraint(equalTo: locationButton.bottomAnchor, constant: 40),
             episodeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            episodeButton.widthAnchor.constraint(equalToConstant: 300),
-            episodeButton.heightAnchor.constraint(equalToConstant: 60)
+            episodeButton.widthAnchor.constraint(equalToConstant: 350),
+            episodeButton.heightAnchor.constraint(equalToConstant: 70)
         ])
         
         NSLayoutConstraint.activate([
-            addPhotoImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
-            //  addPhotoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            addPhotoImageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
-            addPhotoImageView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            addPhotoImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
-            //            addPhotoImageView.heightAnchor.constraint(equalToConstant: 100),
-            //            addPhotoImageView.widthAnchor.constraint(equalToConstant: 100)
+            episodeImageView.topAnchor.constraint(equalTo: episodeButton.topAnchor, constant: 1),
+            episodeImageView.leadingAnchor.constraint(equalTo: episodeButton.leadingAnchor, constant: 5),
+            episodeImageView.bottomAnchor.constraint(equalTo: episodeButton.bottomAnchor, constant: -1),
+            episodeImageView.widthAnchor.constraint(equalToConstant: 100)
         ])
         
+        NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            backgroundImageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
+            backgroundImageView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
+            backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
+        ])
     }
 }

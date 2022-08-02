@@ -8,24 +8,31 @@
 import Foundation
 
 // MARK: - Character
-struct Character: Codable {
+struct CharacterList: Codable {
     let info: Info
-    let results: [Result]
+    let results: [Character]
 }
 
-// MARK: - Result
-struct Result: Codable {
+// MARK: - Character
+struct Character: Codable {
     let id: Int
     let name: String
     let status: String
     let species: String
     let gender: String
-    let location: LocationChar
+    let location: CharacterLocation
     let image: String
+    let origin: Origin
     let episode: [String]?
 }
 
-// MARK: - LocationChar
-struct LocationChar: Codable {
+// MARK: - CharacterLocation
+struct CharacterLocation: Codable {
     let name: String
+}
+
+//MARK: - Origin
+struct Origin: Codable {
+    let name: String
+    let url: String
 }

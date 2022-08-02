@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "Image.png",
+      "filename" : "Снимок экрана 2022-08-02 в 18.58.40.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Image-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Image-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -15,7 +15,6 @@ class LocationViewController: UIViewController {
         tableView.backgroundColor = .specialCellBackground
         tableView.separatorColor = .specialBlueLabel
         tableView.showsVerticalScrollIndicator = false
-        tableView.register(LocationsTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -26,22 +25,26 @@ class LocationViewController: UIViewController {
     private var searchController = UISearchController()
     private var searchedText = String()
     private var isFiltred = false
+    private let idTableViewCell = "idTableViewCell"
     
     private var characters: PagedLocation?
     private var resultsArray = [Location]()
     private var filtredArray = [Location]()
     
+    //MARK: - Override
     override func viewDidLoad() {
         super.viewDidLoad()
         
         fetchCharacters(page: page)
-        tableView.reloadData()
         navigationBarSettings()
         setupViews()
         setupDelegate()
         setConstraints()
+        
+        tableView.register(LocationsTableViewCell.self, forCellReuseIdentifier: idTableViewCell)
     }
     
+    //MARK: - Setups
     private func setupViews() {
         view.backgroundColor = .specialCellBackground
         view.addSubview(tableView)
@@ -56,12 +59,10 @@ class LocationViewController: UIViewController {
     private func navigationBarSettings() {
         
         if let navController = navigationController {
-            
             navController.navigationBar.barStyle = .black
             navController.navigationBar.tintColor = .specialYellow
             
             searchController = UISearchController(searchResultsController: nil)
-            
             searchController.obscuresBackgroundDuringPresentation = false
             searchController.searchBar.returnKeyType = .done
             searchController.searchBar.placeholder = "Search location..."
@@ -78,7 +79,7 @@ class LocationViewController: UIViewController {
         tableView.reloadData()
     }
     
-    private func filtringRecipes(text: String) {
+    private func filtringLocation(text: String) {
         for location in resultsArray {
             if location.name.lowercased().contains(text.lowercased())  {
                 filtredArray.append(location)
@@ -86,32 +87,7 @@ class LocationViewController: UIViewController {
         }
     }
 }
-extension LocationViewController: UISearchBarDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        refreshData()
-        return true
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let text = searchBar.text else { return }
-        filtredArray = [Location]()
-        filtringRecipes(text: text)
-        tableView.reloadData()
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        refreshData()
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filtredArray = [Location]()
-        isFiltred = (searchText.count > 0 ? true : false)
-        filtringRecipes(text: searchText)
-        self.searchedText = searchText
-        tableView.reloadData()
-    }
-    
-}
+
 //MARK: - UITableViewDataSource
 
 extension LocationViewController: UITableViewDataSource {
@@ -120,7 +96,7 @@ extension LocationViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LocationsTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: idTableViewCell, for: indexPath) as! LocationsTableViewCell
         let characterModel = isFiltred ? filtredArray[indexPath.row] : resultsArray[indexPath.row]
         cell.cellConfigure(model: characterModel)
         cell.setHiglightToLable(searchText: self.searchedText, text: characterModel.name)
@@ -145,39 +121,46 @@ extension LocationViewController: UITableViewDelegate {
     }
 }
 
+//MARK: - UISearchBarDelegate
+
+extension LocationViewController: UISearchBarDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        refreshData()
+        return true
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text else { return }
+        filtredArray = [Location]()
+        filtringLocation(text: text)
+        tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        refreshData()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filtredArray = [Location]()
+        isFiltred = (searchText.count > 0 ? true : false)
+        filtringLocation(text: searchText)
+        self.searchedText = searchText
+        tableView.reloadData()
+    }
+}
 //MARK: - FetchCharacters
 
 extension LocationViewController {
     
     func fetchCharacters(page: Int) {
-        NetworkDataFetch.shared.getLocationsData(page: page) { [weak self] result in
-            guard let self = self else { return }
+        NetworkManager.shared.getLocations(page: page, name: nil, type: nil, dimension: nil) { [weak self] (locations) in
+            guard let self = self else {return}
+            let _ = ActivityIndicator.shared.customActivityIndicatory(self.view, startAnimate: true)
             
-            switch result {
-            case .success(let response):
-                if self.resultsArray.count < self.characterCount { self.nextPage = false }
-                
-                self.resultsArray += response.results
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    let _ = ActivityIndicator.shared.customActivityIndicatory(self.view, startAnimate: false)
-                }
-            case .failure(_):
-                let _ = ActivityIndicator.shared.customActivityIndicatory(self.view, startAnimate: true)
-                self.alertOk(title: "Connect error", message: "Please, check your internet connection.")
-            }
-        }
-    }
-    
-    func fetchCharacterCount() {
-        NetworkDataFetch.shared.fetchCharacterCount() { [weak self] result in
-            guard let self =  self else { return }
-            
-            switch result {
-            case .success(let response):
-                self.characterCount = response.info.count
-            case .failure(_):
-                return
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+                self.resultsArray += locations
+                let _ = ActivityIndicator.shared.customActivityIndicatory(self.view, startAnimate: false)
+                self.tableView.reloadData()
             }
         }
     }

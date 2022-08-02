@@ -10,18 +10,23 @@ import UIKit
 class EpisodesTableViewCell: UITableViewCell {
     
     let namaEpisodeLabel = UILabel(text: "",
-                                    font: .getBoldLabel22(),
-                                    color: .specialBlueLabel, line: 0)
+                                   font: .getBoldLabel22(),
+                                   color: .specialBlueLabel,
+                                   line: 0)
     
     let episodeLabel = UILabel(text: "",
-                            font: .getRegularLabel18(),
-                            color: .specialGreen, line: 0)
+                               font: .getRegularLabel18(),
+                               color: .specialGreen,
+                               line: 0)
     
     let dateLabel = UILabel(text: "",
-                                 font: .getRegularLabel18(),
-                                 color: .specialGreen, line: 0)
+                            font: .getRegularLabel18(),
+                            color: .specialGreen,
+                            line: 0)
     
     private var episodeStackView = UIStackView()
+    
+    //MARK: - Override
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -34,23 +39,26 @@ class EpisodesTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - SetupViews
+    
     private func setupViews() {
         backgroundColor = .specialCellBackground
         selectionStyle = .none
         
         episodeStackView =  UIStackView(arrangedSubviews: [namaEpisodeLabel,
-                                                            episodeLabel,
-                                                            dateLabel],
-                                         axis: .vertical,
-                                         spacing: 8)
-        
+                                                           episodeLabel,
+                                                           dateLabel],
+                                        axis: .vertical,
+                                        spacing: 8)
         addSubview(episodeStackView)
     }
+    
+    //MARK: - CellConfigure
     
     func cellConfigure(model: Episode) {
         namaEpisodeLabel.text = model.name
         episodeLabel.text = "Episode: \(model.episode)"
-        dateLabel.text =  "Air date: \(model.air_date)"
+        dateLabel.text =  "Air date: \(model.airDate)"
     }
     
     func setHiglightToLable(searchText: String, text: String) {
