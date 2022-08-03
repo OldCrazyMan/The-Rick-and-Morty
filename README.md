@@ -9,9 +9,12 @@ The project uses:
 
 # INSTALLATION
 
-1. Open the console 
+1. Open the console/terminal, go to the project folder (сopy the project address in console/terminal):
 
-2. Copy the project address to the console and execute the command:
+**cd $**
+
+2. Copy the project address to the console/terminal and execute the command:
+
 **$ pod install**
 
 # What it looks like:
