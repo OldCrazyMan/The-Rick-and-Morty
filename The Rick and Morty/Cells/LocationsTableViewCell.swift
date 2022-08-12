@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LocationsTableViewCell: UITableViewCell {
+final class LocationsTableViewCell: UITableViewCell {
     
     let namaLocationLabel = UILabel(text: "",
                                     font: .getBoldLabel22(),

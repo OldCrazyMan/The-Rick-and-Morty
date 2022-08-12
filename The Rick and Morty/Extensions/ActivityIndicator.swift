@@ -1,6 +1,6 @@
 //
 //  ActivityIndicator.swift
-//  RickAndMorty
+//  The Rick and Morty
 //
 //  Created by Тимур Ахметов on 24.04.2022.
 //

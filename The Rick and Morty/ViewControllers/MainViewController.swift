@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
@@ -62,6 +62,7 @@ class MainViewController: UIViewController {
     lazy var locationButton: UIButton = {
         let button = UIButton(type: .system)
         button.layer.cornerRadius = 10
+        button.titleLabel?.textAlignment = .left
         button.titleLabel?.font = .getBoldLabel22()
         button.backgroundColor = .specialBlueLabel
         button.layer.borderWidth = 1

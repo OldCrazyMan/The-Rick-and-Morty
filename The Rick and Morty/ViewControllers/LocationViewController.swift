@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LocationViewController: UIViewController {
+final class LocationViewController: UIViewController {
     
     private let tableView: UITableView = {
         let tableView = UITableView()

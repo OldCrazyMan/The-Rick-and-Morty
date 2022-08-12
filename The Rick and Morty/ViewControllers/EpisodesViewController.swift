@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EpisodesViewController: UIViewController {
+final class EpisodesViewController: UIViewController {
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -181,4 +181,3 @@ extension EpisodesViewController {
         ])
     }
 }
-

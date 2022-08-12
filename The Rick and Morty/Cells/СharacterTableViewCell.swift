@@ -7,7 +7,7 @@
 
 import UIKit
 
-class СharacterTableViewCell: UITableViewCell {
+final class СharacterTableViewCell: UITableViewCell {
     
     let characterImageView: UIImageView = {
         let imageView = UIImageView()

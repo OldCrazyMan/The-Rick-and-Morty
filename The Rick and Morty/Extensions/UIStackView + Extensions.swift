@@ -1,6 +1,6 @@
 //
 //  UIStackView + Extensions.swift
-//  TerraAppNew
+//  The Rick and Morty
 //
 //  Created by Тимур Ахметов on 27.07.2022.
 //

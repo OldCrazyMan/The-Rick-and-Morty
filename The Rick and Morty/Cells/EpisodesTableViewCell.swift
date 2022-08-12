@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EpisodesTableViewCell: UITableViewCell {
+final class EpisodesTableViewCell: UITableViewCell {
     
     let namaEpisodeLabel = UILabel(text: "",
                                    font: .getBoldLabel22(),

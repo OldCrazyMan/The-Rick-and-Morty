@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CharacterViewController: UIViewController {
+final class CharacterViewController: UIViewController {
     
     private let tableView: UITableView = {
         let tableView = UITableView()
