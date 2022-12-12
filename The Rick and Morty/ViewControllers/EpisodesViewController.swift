@@ -125,7 +125,7 @@ extension EpisodesViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: idTableViewCell, for: indexPath) as! EpisodesTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: idTableViewCell, for: indexPath) as? EpisodesTableViewCell else { return UITableViewCell()}
         let characterModel = isFiltred ? filtredArray[indexPath.row] : resultsArray[indexPath.row]
         cell.cellConfigure(model: characterModel)
         cell.setHiglightToLable(searchText: self.searchedText, text: characterModel.name)

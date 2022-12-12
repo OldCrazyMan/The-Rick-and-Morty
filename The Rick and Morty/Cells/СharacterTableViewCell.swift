@@ -82,7 +82,9 @@ final class СharacterTableViewCell: UITableViewCell {
         genderLabel.text =  "Gender: \(model.gender)"
         locationTextLabel.text = "Location: \(model.location.name )"
         
-        let url: URL = URL(string: "https://rickandmortyapi.com/api/character/avatar/\(model.id).jpeg")!
+        guard let urlString = URL(string: "https://rickandmortyapi.com/api/character/avatar/\(model.id).jpeg") else { return }
+                
+        let url: URL = urlString
         
         NetworkManager.shared.getImage(fromUrl: url) { [weak self] (image) in
             guard let image = image else { return }
